@@ -8,7 +8,7 @@ import { PrismaClient } from '@prisma/client';
 import {adAdmin} from "./utils";
 
 const app = express()
-const port = 3000;
+const port = 3003;
 
 const prisma = new PrismaClient();
 app.use(express.json())
@@ -24,8 +24,6 @@ app.listen(port, () => {
    console.log(`Server running on http://localhost:${port}`);
 });
 
-//export default app
-
 adAdmin()
     .catch(e => {
         console.error(e);
@@ -34,3 +32,5 @@ adAdmin()
     .finally(async () => {
         await prisma.$disconnect();
     });
+
+export default app

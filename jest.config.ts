@@ -12,7 +12,7 @@ const jestConfig: JestConfigWithTsJest = {
                 tsconfig: false,
             },
         ],
-    },
+  },
 }
 
 export default jestConfig

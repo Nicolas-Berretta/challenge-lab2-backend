@@ -12,9 +12,11 @@ class UserService {
     async getUserById(id: number) {
         return await this.userRepository.findById(id)
     }
+
     async createUser(name: string, email: string, password: string):Promise<PublicUser | null>{
         return await this.userRepository.create(name, email, password)
     }
+
     async login(email: string, password: string) {
         const user = await this.userRepository.findByEmail(email)
         if(!user) throw new Error("user not found")

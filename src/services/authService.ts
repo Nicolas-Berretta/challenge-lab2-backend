@@ -17,31 +17,29 @@ class AuthService {
 export const auth = async (req: Request, res: Response, next: NextFunction)  => {
     const token = req.header('Authorization')?.replace('Bearer ', '');
     if (!token) {
-        return res.status(401).send({ error: 'No token provided' });
+        return res.status(400).send({ error: 'No token provided' });
     }
     try {
         const user_data: Token = jwt.verify(token, secret) as Token
-        console.log(user_data)
         next()
     } catch (err) {
-        return res.status(401).send({ error: 'Invalid token' });
+        return res.status(400).send({ error: 'Invalid token' });
     }
 }
 
 export const authAdmin = async (req: Request, res: Response, next: NextFunction)  => {
     const token = req.header('Authorization')?.replace('Bearer ', '');
     if (!token) {
-        return res.status(401).send({ error: 'No token provided' });
+        return res.status(400).send({ error: 'No token provided' });
     }
     try {
         const user_data: Token = jwt.verify(token, secret) as Token
-        console.log(user_data)
         if (user_data.id != 0){
-            res.status(400).send({ error: 'Authorization' });
+            return res.status(400).send({ error: 'Unauthorized user' });
         }
         next()
     } catch (err) {
-        return res.status(401).send({ error: 'Invalid token' });
+        return res.status(400).send({ error: 'Invalid token' });
     }
 }
 
