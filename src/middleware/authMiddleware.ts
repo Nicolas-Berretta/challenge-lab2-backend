@@ -1,11 +1,11 @@
 import express, {NextFunction, Request, Response} from "express";
 import jwt from "jsonwebtoken";
-import {PublicUser, Token} from "../utils";
+import {UserType, Token} from "../utils/types.ts";
 
 const secret :string = process.env.TOKEN_SECRET as string
 
-class AuthService {
-    async generateToken(user: PublicUser){
+class AuthMiddleware {
+    async generateToken(user: UserType){
         return jwt.sign(
             {id: user.id, name: user.name, email:user.email},
             secret,
@@ -43,5 +43,5 @@ export const authAdmin = async (req: Request, res: Response, next: NextFunction)
     }
 }
 
-export default AuthService
+export default AuthMiddleware
 

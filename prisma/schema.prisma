@@ -27,7 +27,7 @@ model Email {
   id Int @id @default(autoincrement())
   sender User @relation(fields: [senderEmail], references: [email])
   senderEmail String
-  to String[]
+  to String
   sentDate DateTime @default(now())
   subject String
   body String

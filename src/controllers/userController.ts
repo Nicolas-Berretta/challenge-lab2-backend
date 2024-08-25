@@ -2,10 +2,10 @@ import {Request, Response} from "express";
 import UserService from "../services/userService";
 import UserRepository, {UserError} from "../repositories/userRepository";
 import AdminService from "../services/adminService"
-import AuthService from "../services/authService";
-import {router} from "../utils";
+import AuthMiddleware from "../middleware/authMiddleware.ts";
+import {router} from "../utils/const.ts";
 
-const authService = new AuthService()
+const authService = new AuthMiddleware()
 const userRepository = new UserRepository()
 const userService = new UserService(userRepository);
 
@@ -37,10 +37,10 @@ router.post("/login", async (req: Request, res: Response) => {
         const {email, password} = req.body
         const result = await userService.login(email, password)
         if(!result){
-            res.status(400).send(result)
+            res.status(400).send("bad request")
         } else {
             const token = await authService.generateToken(result)
-            res.status(200).send({result, token})
+            res.status(200).send({ token})
         }
     } catch (error){
         res

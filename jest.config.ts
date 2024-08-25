@@ -1,18 +1,11 @@
-// jest.config.ts
-import type { JestConfigWithTsJest } from 'ts-jest'
-
-const jestConfig: JestConfigWithTsJest = {
-    // [...]
+/** @type {import('ts-jest').JestConfigWithTsJest} **/
+module.exports = {
+    preset: "ts-jest",
+    testEnvironment: "node",
+    testMatch:["**/**/*.test.ts"],
+    verbose: true,
+    forceExit: true,
     transform: {
-        // '^.+\\.[tj]sx?$' to process ts,js,tsx,jsx with `ts-jest`
-        // '^.+\\.m?[tj]sx?$' to process ts,js,tsx,jsx,mts,mjs,mtsx,mjsx with `ts-jest`
-        '^.+\\.m?[tj]sx?$': [
-            'ts-jest',
-            {
-                tsconfig: false,
-            },
-        ],
-  },
-}
-
-export default jestConfig
+        "^.+.tsx?$": ["ts-jest",{}],
+    },
+};

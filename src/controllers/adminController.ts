@@ -1,5 +1,5 @@
 import {Request, Response} from "express";
-import {router} from "../utils";
+import {router} from "../utils/const.ts";
 import AdminService from "../services/adminService";
 import UserRepository from "../repositories/userRepository";
 

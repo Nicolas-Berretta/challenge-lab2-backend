@@ -1,21 +1,10 @@
-import {Router} from "express";
-import { PrismaClient } from '@prisma/client';
 import bcryp from "bcrypt";
+import {Router} from "express";
+import {PrismaClient} from "@prisma/client";
+
 export const router: Router = Router();
 
-const prisma = new PrismaClient()
-
-export type PublicUser = {
-    id: number
-    name:string
-    email:string
-}
-export type Token = {
-    id:number
-    name:string
-    email:string
-    expiresIn:string
-}
+export const prisma = new PrismaClient()
 
 const adminId: number = Number(process.env.ADMIN_ID as string)
 export async function adAdmin() {
@@ -32,3 +21,5 @@ export async function adAdmin() {
         },
     });
 }
+
+export const salt: number = 12

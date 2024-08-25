@@ -1,12 +1,13 @@
 import {UserRepositoryInterface} from './contracts/userRepositoryInterface';
 import {PrismaClient, User} from "@prisma/client";
 import bcryp from "bcrypt";
-import {PublicUser} from "../utils";
+import {Stat, UserType} from "../utils/types.ts";
+import {Stats} from "node:fs";
 
 const prisma = new PrismaClient()
 
 class UserRepository implements UserRepositoryInterface{
-    async create(name: string, email: string, password: string): Promise<PublicUser> {
+    async create(name: string, email: string, password: string): Promise<UserType> {
         const oldUser = await prisma.user.findFirst({where: {email: email}})
         if(oldUser){
            throw new UserError("Email already associated with an account", 400)
@@ -19,12 +20,12 @@ class UserRepository implements UserRepositoryInterface{
                 password: hash
             }
         })
-        return  {id: user.id, name: user.name, email: user.email}
+        return {id: user.id, name: user.name, email: user.email}
     }
 
-    async findById(id: number): Promise<{ name: string; email: string; } | null> {
+    async findById(userId: number): Promise<UserType | null> {
         return  Promise.resolve(prisma.user.findFirst({
-            where:{id: id,isActive: true},
+            where:{id: userId,isActive: true},
             select:{
                 id: true,
                 name: true,
@@ -47,7 +48,6 @@ class UserRepository implements UserRepositoryInterface{
         return  prisma.user.update({
             where: {
                 id: user.id,
-                isActive: true
             },
             data: {
                 name: user.name,
@@ -57,20 +57,18 @@ class UserRepository implements UserRepositoryInterface{
         })
     }
 
-    async delete(user: User): Promise<boolean> {
-        const result = prisma.user.update({
-            where:{
-                id: user.id,
-                isActive: true
-            },
-            data:{
-                isActive: false
+    async delete(user: UserType): Promise<UserType> {
+        return prisma.user.delete({
+            where: {
+                id:user.id,
+                name:user.name,
+                email:user.email
             }
         })
-        return Promise.resolve(!user.isActive)//(!false) -> true, meaning the deletion was successful
+
     }
 
-    async usersEmailStats():Promise<{email: string, count: number}[]>{
+    async usersEmailStats():Promise<Stat[]>{
         const startOfDay = new Date(new Date().setHours(0, 0, 0, 0));
         const endOfDay = new Date(new Date().setHours(23, 59, 59, 999));
         const usersWithEmailCount = await prisma.user.findMany({
@@ -98,8 +96,6 @@ class UserRepository implements UserRepositoryInterface{
     }
 }
 
-
-
 export class UserError extends Error {
     status: number;
 
@@ -110,4 +106,5 @@ export class UserError extends Error {
         Object.setPrototypeOf(this, UserError.prototype);
     }
 }
+
 export default UserRepository
